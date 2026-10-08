@@ -1,11 +1,14 @@
 {
   "description": "Sensing EDU also monitors flood; no EMU serves flood. Expected: C3 fails.",
+  "expect": [
+    "C3"
+  ],
   "httpBase": "http://aems.example",
   "mqttBroker": "mqtt://broker.aems.example:1883",
   "placeholders": {
-    "PRIORITY_LEVELS": 9,
-    "THETA_HIGH": 3,
-    "THETA_STANDARD": 6
+    "PRIORITY_LEVELS": 4,
+    "THETA_HIGH": 2,
+    "THETA_STANDARD": 3
   },
   "instances": [
     {
@@ -18,9 +21,19 @@
           "affordance": "/events/alarm"
         },
         {
+          "rel": "consumes",
+          "target": "edu-s-001",
+          "affordance": "/events/monitoring"
+        },
+        {
           "rel": "dispatchesTo",
           "target": "emu-fire",
           "affordance": "/actions/handleAlarm"
+        },
+        {
+          "rel": "updatesPriority",
+          "target": "edu-s-001",
+          "affordance": "/actions/updatePriority"
         }
       ]
     },
@@ -48,7 +61,14 @@
           "fire",
           "flood"
         ]
-      }
+      },
+      "links": [
+        {
+          "rel": "registersWith",
+          "target": "emc",
+          "affordance": "/actions/configure"
+        }
+      ]
     },
     {
       "id": "edu-a-001",

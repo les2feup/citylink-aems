@@ -1,0 +1,12 @@
+{
+  "messageClass": "alarm",
+  "priority": 2,
+  "deviceId": "{{deviceId}}",
+  "zone": "zone-001",
+  "hazardFactor": "{{hazardFactor}}",
+  "timestamp": 1760000000000,
+  "payload": {
+    "identifier": "{{deviceId}}-{{hazardFactor}}-0001",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><alert xmlns=\"urn:oasis:names:tc:emergency:cap:1.2\"><identifier>{{deviceId}}-{{hazardFactor}}-0001</identifier><sender>urn:aems:{{deviceId}}</sender><sent>2026-10-08T12:30:00-03:00</sent><status>Urgent</status><msgType>Alert</msgType><scope>Private</scope><info><category>Safety</category><event>{{hazardFactor}}</event><urgency>Immediate</urgency><severity>Severe</severity><certainty>Observed</certainty><parameter><valueName>CRI</valueName><value>0.82</value></parameter><parameter><valueName>hazardFactor</valueName><value>{{hazardFactor}}</value></parameter><area><areaDesc>zone-001</areaDesc></area></info></alert>"
+  }
+}

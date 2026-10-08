@@ -29,6 +29,14 @@
     "schedules": {
       "@id": "citylink:schedules",
       "@type": "@id"
+    },
+    "registersWith": {
+      "@id": "citylink:registersWith",
+      "@type": "@id"
+    },
+    "updatesPriority": {
+      "@id": "citylink:updatesPriority",
+      "@type": "@id"
     }
   }
 }

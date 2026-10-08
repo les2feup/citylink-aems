@@ -1,11 +1,12 @@
 {
-  "description": "One sensing EDU (fire), one actuating EDU, EMC, fire EMU, TRIAGE/4 scheduler with tertile thresholds over N=9. Expected: all checks pass.",
+  "description": "One sensing EDU (fire), one actuating EDU, EMC, fire EMU, TRIAGE/4 scheduler. N = 4 CP output classes (Critical = 1 ... Low = 4); thetaH = 2 (Critical, High -> HIGH), thetaS = 3 (Moderate -> STANDARD). Expected: all checks pass.",
+  "expect": [],
   "httpBase": "http://aems.example",
   "mqttBroker": "mqtt://broker.aems.example:1883",
   "placeholders": {
-    "PRIORITY_LEVELS": 9,
-    "THETA_HIGH": 3,
-    "THETA_STANDARD": 6
+    "PRIORITY_LEVELS": 4,
+    "THETA_HIGH": 2,
+    "THETA_STANDARD": 3
   },
   "instances": [
     {
@@ -18,9 +19,19 @@
           "affordance": "/events/alarm"
         },
         {
+          "rel": "consumes",
+          "target": "edu-s-001",
+          "affordance": "/events/monitoring"
+        },
+        {
           "rel": "dispatchesTo",
           "target": "emu-fire",
           "affordance": "/actions/handleAlarm"
+        },
+        {
+          "rel": "updatesPriority",
+          "target": "edu-s-001",
+          "affordance": "/actions/updatePriority"
         }
       ]
     },
@@ -47,7 +58,14 @@
         "HAZARD_FACTORS": [
           "fire"
         ]
-      }
+      },
+      "links": [
+        {
+          "rel": "registersWith",
+          "target": "emc",
+          "affordance": "/actions/configure"
+        }
+      ]
     },
     {
       "id": "edu-a-001",

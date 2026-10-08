@@ -14,7 +14,7 @@ const MQTT_CTX = { mqv: "http://www.example.org/mqtt-binding#" };
 
 // A placeholder that is the whole JSON string ("{{X}}") is replaced by the typed value
 // (number, array); a placeholder inside a longer string is replaced textually.
-function fillPlaceholders(raw: string, map: Record<string, unknown>): string {
+export function fillPlaceholders(raw: string, map: Record<string, unknown>): string {
   const typed = raw.replace(/"\{\{(\w+)\}\}"/g, (_, k) => {
     if (!(k in map)) throw new Error(`missing placeholder ${k}`);
     return JSON.stringify(map[k]);

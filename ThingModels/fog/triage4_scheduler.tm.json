@@ -10,7 +10,7 @@
   "title": "TRIAGE/4 Scheduler",
   "description": "Management interface of the TRIAGE/4 scheduler at a fog broker. The Thing is the scheduler's configuration surface, not the queue: messages are not addressed to it. schedulingInput declares the envelope fields the band assignment reads.",
   "version": {
-    "model": "0.2.0"
+    "model": "0.3.0"
   },
   "schedulingInput": {
     "type": "object",

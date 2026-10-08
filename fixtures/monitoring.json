@@ -1,0 +1,14 @@
+{
+  "messageClass": "monitoring",
+  "priority": 3,
+  "deviceId": "{{deviceId}}",
+  "zone": "zone-001",
+  "hazardFactor": "{{hazardFactor}}",
+  "timestamp": 1760000000000,
+  "payload": {
+    "observedProperty": "temperature",
+    "hasSimpleResult": 31.5,
+    "unit": "Cel",
+    "resultTime": "2026-10-08T12:30:00-03:00"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsSensingEduTM"
+  ],
+  "title": "Sensing EDU",
+  "description": "Application-layer TM of a sensing EDU, to be composed by the CityLink Edge Connector with Platform and Embedded Core TMs. It receives the CRI of its zone from the EMC at registration (configure) and on every CRI change (updatePriority); at runtime it converts the CRI and the Hazard Perception of each hazard factor into CP and assigns the discretized rank to every envelope. Without a connection to the EMC it keeps the last CRI received.",
+  "version": {
+    "model": "0.3.0"
+  },
+  "hazardFactors": "{{HAZARD_FACTORS}}",
+  "properties": {
+    "zone": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
+      "readOnly": true
+    },
+    "priorityLevels": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels",
+      "readOnly": true
+    },
+    "contextualRiskIndex": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex",
+      "description": "CRI currently applied, written by configure and updatePriority.",
+      "readOnly": true
+    },
+    "issuedAt": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp",
+      "title": "Issued at",
+      "description": "issuedAt of the CRI currently applied; older assignments are discarded.",
+      "readOnly": true
+    },
+    "contextualPriority": {
+      "title": "Current rank per hazard factor",
+      "readOnly": true,
+      "observable": true,
+      "type": "object",
+      "additionalProperties": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+      }
+    }
+  },
+  "actions": {
+    "updatePriority": {
+      "title": "Update priority",
+      "description": "Invoked by the EMC on every EDU of a zone whenever the CRI of that zone changes. The update is atomic; an assignment older than the one applied (by issuedAt) is discarded.",
+      "input": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityAssignment"
+      }
+    }
+  },
+  "events": {
+    "monitoring": {
+      "title": "Monitoring",
+      "data": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/monitoringEnvelope"
+      }
+    },
+    "alarm": {
+      "title": "Alarm",
+      "data": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmEnvelope",
+        "maxProperties": 2
+      }
+    }
+  }
+}

@@ -8,9 +8,9 @@
     "AemsMitigationTM"
   ],
   "title": "Emergency Mitigation Unit",
-  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives emergencies dispatched by the EMC and may command actuating EDUs directly.",
+  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives the alarm envelope forwarded unchanged by the EMC and may command actuating EDUs directly, propagating the alarm's rank, device and zone into the mitigation envelope without recalculation.",
   "version": {
-    "model": "0.2.0"
+    "model": "0.3.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "actions": {
@@ -18,40 +18,7 @@
       "title": "Handle alarm",
       "description": "Alarm forwarding (S3 -> M1).",
       "input": {
-        "type": "object",
-        "properties": {
-          "messageClass": {
-            "type": "string",
-            "const": "alarm"
-          },
-          "priority": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
-          },
-          "deviceId": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
-          },
-          "zone": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
-          },
-          "hazardFactor": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
-          },
-          "timestamp": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
-          },
-          "payload": {
-            "type": "object"
-          }
-        },
-        "required": [
-          "messageClass",
-          "priority",
-          "deviceId",
-          "zone",
-          "hazardFactor",
-          "timestamp",
-          "payload"
-        ]
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmEnvelope"
       },
       "output": {
         "type": "object",

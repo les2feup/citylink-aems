@@ -1,17 +1,19 @@
 {
   "name": "aems-emergency-model",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Emergency Model: W3C WoT Thing Models and structural validation for the priority-aware a-EMS architecture",
   "scripts": {
     "instantiate": "tsx src/instantiate.ts",
     "validate": "tsx src/validate.ts minimal",
-    "validate:negative": "tsx src/validate.ts negative-coverage; tsx src/validate.ts negative-thresholds"
+    "validate:all": "tsx src/validate.ts --all",
+    "fetch:cap": "tsx src/fetch-cap.ts"
   },
   "license": "MIT",
   "dependencies": {
     "@thing-description-playground/core": "^1.4.0",
     "ajv": "^8.20.0",
-    "ajv-formats": "^3.0.1"
+    "ajv-formats": "^3.0.1",
+    "xmllint-wasm": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.4",
