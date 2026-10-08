@@ -1,5 +1,5 @@
 {
-  "description": "The CAP hazardFactor parameter differs from the envelope's hazard factor. Expected: C6 fails.",
+  "description": "The CAP hazardFactor parameter differs from the message header's hazard factor. Expected: C6 fails.",
   "expect": [
     "C6"
   ],

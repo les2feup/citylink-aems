@@ -11,7 +11,7 @@
   "title": "TRIAGE/4 Scheduler",
   "description": "Optional deployment specialization describing TRIAGE/4 configuration, not its queue or an integrated runtime. Requires integer priority with lower-first order. Device and geographic zone identity remain separate from priority.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "schedulingInput": {
     "type": "object",

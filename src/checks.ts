@@ -153,7 +153,7 @@ export function compatible(prod: any = {}, cons: any = {}, path = ""): string[] 
   return errs;
 }
 
-// An envelope schema narrowed to the hazard factors a given edge can carry.
+// A message schema narrowed to the hazard factors a given edge can carry.
 function narrow(schema: any, fs: string[]) {
   const s = structuredClone(schema);
   if (s?.properties?.hazardFactor) s.properties.hazardFactor.enum = fs;
@@ -287,7 +287,7 @@ async function capErrors(xml: string, alarm: any): Promise<string[]> {
   const errs = r.valid ? [] : r.errors.map((x: any) => `XSD: ${x.rawMessage}`);
   const p = capParameters(xml), cri = Number(p.CRI);
   if (!("CRI" in p) || !(cri >= 0 && cri <= 1)) errs.push(`CAP parameter CRI missing or outside [0, 1] (${p.CRI})`);
-  if (p.hazardFactor !== alarm.hazardFactor) errs.push(`CAP parameter hazardFactor '${p.hazardFactor}' != envelope '${alarm.hazardFactor}'`);
+  if (p.hazardFactor !== alarm.hazardFactor) errs.push(`CAP parameter hazardFactor '${p.hazardFactor}' != header '${alarm.hazardFactor}'`);
   const id = xml.match(/<identifier>([^<]*)<\/identifier>/)?.[1];
   if (id !== alarm.payload.identifier) errs.push(`CAP <identifier> '${id}' != payload.identifier '${alarm.payload.identifier}'`);
   return errs;
@@ -307,13 +307,13 @@ export async function c6(rec: Rec, tds: any[], dir: string) {
       report(rec, "C6", `monitoring ${w} accepted by ${s.id} monitoring`, accepts(s.events.monitoring.data, mon));
       for (const name of ["monitoring", "alarm"]) {
         const data = name === "monitoring" ? mon : alarm;
-        const envelope = s.events[name].data;
+        const message = s.events[name].data;
         report(rec, "C6", `${name} ${w} priority bounds`, [
           ...accepts(schema, schema.minimum),
           ...accepts(schema, schema.maximum),
-          ...rejects(envelope, { ...data, priority: schema.minimum - 1 }, "priority below deployment minimum"),
-          ...rejects(envelope, { ...data, priority: schema.maximum + 1 }, "priority above deployment maximum"),
-          ...(schema.type === "integer" ? rejects(envelope, { ...data, priority: schema.minimum + 0.5 }, "fractional priority") : [])]);
+          ...rejects(message, { ...data, priority: schema.minimum - 1 }, "priority below deployment minimum"),
+          ...rejects(message, { ...data, priority: schema.maximum + 1 }, "priority above deployment maximum"),
+          ...(schema.type === "integer" ? rejects(message, { ...data, priority: schema.minimum + 0.5 }, "fractional priority") : [])]);
       }
       for (const x of schedulersOf(`${s.id}#/events/monitoring`))
         report(rec, "C6", `monitoring ${w} accepted by ${x.id} schedulingInput`, accepts(x.schedulingInput, mon));

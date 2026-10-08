@@ -8,9 +8,9 @@
     "AemsControllerTM"
   ],
   "title": "Emergency Management Controller",
-  "description": "Cloud controller. Configuration selects zone CRI from the declared MGA assessment and pushes changes exceeding its configured threshold through updatePriority. Alarm handling forwards the originating envelope to the EMUs serving its hazard factor. Firmware priority calculation, scheduler selection and mitigation policy are outside this interface.",
+  "description": "Cloud controller. Configuration selects zone CRI from the declared MGA assessment and pushes changes exceeding its configured threshold through updatePriority. Alarm handling forwards the originating alarm message to the EMUs serving its hazard factor. Firmware priority calculation, scheduler selection and mitigation policy are outside this interface.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "actions": {
     "configure": {

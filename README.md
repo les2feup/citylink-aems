@@ -56,6 +56,9 @@ Version 0.4.0 changes existing interfaces. All scenarios and fixtures are migrat
 there is no legacy number-of-classes field. The original 1–4 lower-first scenarios remain
 valid deployment examples, without identification with four compulsory fuzzy output classes.
 
+Version 0.5.0 renames the shared message definitions to `messageHeader`, `monitoringMessage`,
+`alarmMessage` and `mitigationMessage`; their schemas are unchanged.
+
 ## Scheduling
 
 `scheduling` is required in every manifest:
@@ -81,20 +84,21 @@ identity remains independent of emitted priority here.
 
 ## Messages and flows
 
-| Flow | Direction | Affordance | Binding | Envelope | Scheduled |
+| Flow | Direction | Affordance | Binding | Message format | Scheduled |
 |---|---|---|---|---|---|
-| Registration | EDU → EMC; response EMC → EDU | `configure` action | request-response | none | no |
-| Context update | EMC → EDU | `updatePriority` action | request-response | none | no |
+| Registration | EDU → EMC; response EMC → EDU | `configure` action | request-response | action schema | no |
+| Context update | EMC → EDU | `updatePriority` action | request-response | action schema | no |
 | Monitoring | EDU → EMC | `monitoring` event | MQTT | monitoring | deployment choice |
 | Alarm | EDU → EMC | `alarm` event | MQTT | alarm | deployment choice |
 | Alarm forwarding | EMC → EMU | `handleAlarm` action | request-response | alarm | no |
 | Mitigation | EMU → actuator | `mitigate` action | request-response | mitigation | no |
 
-Shared envelopes distinguish class, priority, source device, zone, hazard factor, timestamp,
-and payload. Alarm forwarding is specified to retain the envelope; mitigation preserves
-priority and source lineage without recalculation. Schema checks establish that interfaces
-can carry these fields, not that firmware preserves their values at runtime. Command
-selection and arbitration remain external; no responder-allocation policy is implemented.
+Monitoring, alarm and mitigation messages share a header with class, priority, source device,
+zone, hazard factor and timestamp, followed by a class-specific payload. Alarm forwarding is
+specified to retain the alarm message; mitigation preserves priority and source lineage
+without recalculation. Schema checks establish that interfaces can carry these fields, not
+that firmware preserves their values at runtime. Command selection and arbitration remain
+external; no responder-allocation policy is implemented.
 Monitoring follows SOSA observation structure as plain JSON; alarms carry CAP XML.
 
 ## Running and layout

@@ -10,7 +10,7 @@
   "title": "Deployment event scheduling interface",
   "description": "Test interface accepting continuous higher-first priority. No scheduling algorithm or queue execution is implemented.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "schedulingInput": {
     "type": "object",

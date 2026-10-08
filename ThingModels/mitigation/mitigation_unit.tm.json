@@ -8,9 +8,9 @@
     "AemsMitigationTM"
   ],
   "title": "Emergency Mitigation Unit",
-  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives the alarm envelope forwarded unchanged by the EMC and may command actuating EDUs directly, propagating the alarm's priority, device and zone into the mitigation envelope without recalculation.",
+  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives the alarm message forwarded unchanged by the EMC and may command actuating EDUs directly, propagating the alarm's priority, device and zone into the mitigation message header without recalculation.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "actions": {
@@ -18,7 +18,7 @@
       "title": "Handle alarm",
       "description": "Alarm forwarding (S3 -> M1).",
       "input": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmEnvelope"
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmMessage"
       },
       "output": {
         "type": "object",

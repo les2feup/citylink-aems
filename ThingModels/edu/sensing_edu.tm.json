@@ -10,7 +10,7 @@
   "title": "Sensing EDU",
   "description": "Application-layer TM of a sensing EDU, composed with CityLink Platform and Embedded Core TMs. It receives zone CRI and issuedAt through configure and updatePriority. Firmware emits priority per hazard factor, using CRI directly or incorporating local information such as HP. Its calculation is outside this model. Without a connection to the EMC the last contextual configuration may be outdated.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
@@ -53,13 +53,13 @@
     "monitoring": {
       "title": "Monitoring",
       "data": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/monitoringEnvelope"
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/monitoringMessage"
       }
     },
     "alarm": {
       "title": "Alarm",
       "data": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmEnvelope"
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmMessage"
       }
     }
   }

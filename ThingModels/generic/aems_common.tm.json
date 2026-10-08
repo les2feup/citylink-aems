@@ -4,9 +4,9 @@
   ],
   "@type": "tm:ThingModel",
   "title": "aems_common",
-  "description": "Schema library for the a-EMS. These properties are not exposed by any Thing; other Thing Models reference them with tm:ref, following the CityLink common_props pattern. The class envelopes (monitoring, alarm, mitigation) and priorityAssignment are each defined once here, so every affordance that uses them shares a single definition.",
+  "description": "Schema library for the a-EMS. These properties are not exposed by any Thing; other Thing Models reference them with tm:ref, following the CityLink common_props pattern. The message formats (monitoring, alarm, mitigation) and priorityAssignment are each defined once here, so every affordance that uses them shares a single definition.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "properties": {
     "messageClass": {
@@ -85,9 +85,9 @@
         "issuedAt"
       ]
     },
-    "envelope": {
-      "title": "Message envelope (common header)",
-      "description": "Fields shared by every class envelope. deviceId and zone refer to the origin of the emergency or observation (the detecting EDU), also in mitigation messages.",
+    "messageHeader": {
+      "title": "Message header",
+      "description": "Header fields shared by every message class. deviceId and zone refer to the origin of the emergency or observation (the detecting EDU), also in mitigation messages.",
       "type": "object",
       "properties": {
         "messageClass": {
@@ -122,8 +122,8 @@
         "payload"
       ]
     },
-    "monitoringEnvelope": {
-      "title": "Monitoring envelope",
+    "monitoringMessage": {
+      "title": "Monitoring message",
       "type": "object",
       "properties": {
         "messageClass": {
@@ -181,8 +181,8 @@
         "payload"
       ]
     },
-    "alarmEnvelope": {
-      "title": "Alarm envelope",
+    "alarmMessage": {
+      "title": "Alarm message",
       "description": "Emitted by the sensing EDU and forwarded unchanged by the EMC to the EMUs that serve the hazard factor.",
       "type": "object",
       "properties": {
@@ -234,8 +234,8 @@
         "payload"
       ]
     },
-    "mitigationEnvelope": {
-      "title": "Mitigation envelope",
+    "mitigationMessage": {
+      "title": "Mitigation message",
       "description": "Sent by an EMU to an actuating EDU. priority, deviceId, zone and hazardFactor refer to the originating emergency and are available for copying from its alarm without recalculation. Command choice and arbitration belong to local mitigation logic, outside the model.",
       "type": "object",
       "properties": {

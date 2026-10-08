@@ -13,7 +13,7 @@ Edit TMs, manifests and fixtures, not generated TDs. Run `npm run validate:all` 
 Applicable empty checks fail; C5 deliberately returns not applicable for `scheduling=none`.
 An invalid manifest stops instantiation with a named failed prerequisite.
 
-## Current invariants (v0.4.0)
+## Current invariants (v0.5.0)
 
 - Firmware computes emitted priority; TMs describe its interface. HP, fuzzy CP, four ranks,
   and TRIAGE/4 are not core requirements.
@@ -28,9 +28,10 @@ An invalid manifest stops instantiation with a named failed prerequisite.
   integer-only interfaces. Compare configuration pairs through registration links.
 - Every sensing EDU registers with its EMC configure action and has the corresponding
   controller update and alarm-consumption links. Preserve hazard-specific routing checks.
-- Three envelope classes: monitoring, alarm, mitigation. Source identity, zone, hazard
-  factor, class and priority are separate. Forwarding/copying are declared behavior;
-  schema compatibility is not evidence of runtime value preservation.
+- Three message classes (monitoring, alarm, mitigation) share `messageHeader` and differ in
+  payload. Source identity, zone, hazard factor, class and priority are separate.
+  Forwarding/copying are declared behavior; schema compatibility is not evidence of runtime
+  value preservation.
 - EMC never commands actuators. EMUs address actuators directly; command selection,
   arbitration and resource allocation remain external.
 - `scheduling=none` forbids scheduler instances and links. `required` covers monitoring and

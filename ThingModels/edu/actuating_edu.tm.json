@@ -8,9 +8,9 @@
     "AemsActuatingEduTM"
   ],
   "title": "Actuating EDU",
-  "description": "Application-layer TM of an actuating EDU. Acts locally (E3) or on command from an EMU through 'mitigate', bound to request-response so the command bypasses any deployment broker queue and does not pass through the EMC. The command carries the mitigation envelope, whose priority the EDU may use as an input to its local logic; how it arbitrates concurrent commands is not specified by the architecture.",
+  "description": "Application-layer TM of an actuating EDU. Acts locally (E3) or on command from an EMU through 'mitigate', bound to request-response so the command bypasses any deployment broker queue and does not pass through the EMC. The command carries a mitigation message, whose priority the EDU may use as an input to its local logic; how it arbitrates concurrent commands is not specified by the architecture.",
   "version": {
-    "model": "0.4.0"
+    "model": "0.5.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
@@ -33,7 +33,7 @@
       "title": "Mitigate",
       "description": "Mitigation (M2 -> E3).",
       "input": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/mitigationEnvelope"
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/mitigationMessage"
       },
       "output": {
         "type": "object",
