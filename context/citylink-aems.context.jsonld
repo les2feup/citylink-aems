@@ -37,6 +37,11 @@
     "updatesPriority": {
       "@id": "citylink:updatesPriority",
       "@type": "@id"
-    }
+    },
+    "priorityContract": {
+      "@id": "citylink:priorityContract",
+      "@type": "@json"
+    },
+    "AemsTriage4SchedulerTM": "citylink:AemsTriage4SchedulerTM"
   }
 }

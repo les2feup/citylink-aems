@@ -4,9 +4,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ROOT, loadJson, resolveRefs } from "./resolve.ts";
+import { checkScenario, type PriorityContract } from "./contracts.ts";
 
 type Instance = {
-  id: string; tm: string; placeholders?: Record<string, unknown>;
+  id: string; tm: string; priorityContract?: PriorityContract; placeholders?: Record<string, unknown>;
   links?: { rel: string; target: string; affordance: string }[];
 };
 
@@ -27,19 +28,22 @@ export function fillPlaceholders(raw: string, map: Record<string, unknown>): str
 
 export function instantiate(scenarioDir: string): string[] {
   const sc = loadJson(join(scenarioDir, "scenario.json"));
+  checkScenario(sc);
   const outDir = join(scenarioDir, "td");
   mkdirSync(outDir, { recursive: true });
   const written: string[] = [];
   for (const inst of sc.instances as Instance[]) {
     const raw = JSON.stringify(loadJson(join(ROOT, inst.tm)));
     const map = { ...(sc.placeholders ?? {}), ...(inst.placeholders ?? {}) };
-    const td = resolveRefs(JSON.parse(fillPlaceholders(raw, map)));
+    const contract = inst.priorityContract ?? sc.priorityContract;
+    const td = resolveRefs(JSON.parse(fillPlaceholders(raw, map)), 0, contract);
     // tm:ref targets may themselves contain placeholders: fill again after resolution.
     const done = JSON.parse(fillPlaceholders(JSON.stringify(td), map));
     const types = ([] as string[]).concat(done["@type"]).filter((t) => t !== "tm:ThingModel");
     done["@type"] = ["Thing", ...types];
     done["@context"] = [...[].concat(done["@context"]), MQTT_CTX];
     done.id = `urn:aems:${inst.id}`;
+    done.priorityContract = structuredClone(contract);
     done.title = `${done.title} (${inst.id})`;
     done.securityDefinitions = { nosec_sc: { scheme: "nosec" } };
     done.security = ["nosec_sc"];

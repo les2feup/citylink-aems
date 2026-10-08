@@ -1,6 +1,6 @@
 {
   "name": "aems-emergency-model",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Emergency Model: W3C WoT Thing Models and structural validation for the priority-aware a-EMS architecture",
   "scripts": {
     "instantiate": "tsx src/instantiate.ts",

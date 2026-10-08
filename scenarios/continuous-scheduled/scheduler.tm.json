@@ -1,0 +1,47 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsSchedulerTM"
+  ],
+  "title": "Deployment event scheduling interface",
+  "description": "Test interface accepting continuous higher-first priority. No scheduling algorithm or queue execution is implemented.",
+  "version": {
+    "model": "0.4.0"
+  },
+  "schedulingInput": {
+    "type": "object",
+    "properties": {
+      "messageClass": {
+        "type": "string",
+        "enum": [
+          "alarm",
+          "monitoring"
+        ]
+      },
+      "priority": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+      },
+      "deviceId": {
+        "type": "string"
+      },
+      "zone": {
+        "type": "string"
+      },
+      "payload": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "messageClass",
+      "priority",
+      "deviceId",
+      "zone",
+      "payload"
+    ]
+  },
+  "properties": {}
+}

@@ -8,9 +8,9 @@
     "AemsMitigationTM"
   ],
   "title": "Emergency Mitigation Unit",
-  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives the alarm envelope forwarded unchanged by the EMC and may command actuating EDUs directly, propagating the alarm's rank, device and zone into the mitigation envelope without recalculation.",
+  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives the alarm envelope forwarded unchanged by the EMC and may command actuating EDUs directly, propagating the alarm's priority, device and zone into the mitigation envelope without recalculation.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "actions": {

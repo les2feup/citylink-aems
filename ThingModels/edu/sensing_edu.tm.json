@@ -8,18 +8,14 @@
     "AemsSensingEduTM"
   ],
   "title": "Sensing EDU",
-  "description": "Application-layer TM of a sensing EDU, to be composed by the CityLink Edge Connector with Platform and Embedded Core TMs. It receives the CRI of its zone from the EMC at registration (configure) and on every CRI change (updatePriority); at runtime it converts the CRI and the Hazard Perception of each hazard factor into CP and assigns the discretized rank to every envelope. Without a connection to the EMC it keeps the last CRI received.",
+  "description": "Application-layer TM of a sensing EDU, composed with CityLink Platform and Embedded Core TMs. It receives zone CRI and issuedAt through configure and updatePriority. Firmware emits priority per hazard factor, using CRI directly or incorporating local information such as HP. Its calculation is outside this model. Without a connection to the EMC the last contextual configuration may be outdated.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
     "zone": {
       "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
-      "readOnly": true
-    },
-    "priorityLevels": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels",
       "readOnly": true
     },
     "contextualRiskIndex": {
@@ -34,13 +30,14 @@
       "readOnly": true
     },
     "contextualPriority": {
-      "title": "Current rank per hazard factor",
+      "title": "Current priority per hazard factor",
       "readOnly": true,
       "observable": true,
       "type": "object",
       "additionalProperties": {
         "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
-      }
+      },
+      "description": "Firmware may assign the same priority to different factors; no local hazard-perception calculation is required."
     }
   },
   "actions": {

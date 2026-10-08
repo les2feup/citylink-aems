@@ -6,7 +6,6 @@
   "httpBase": "http://aems.example",
   "mqttBroker": "mqtt://broker.aems.example:1883",
   "placeholders": {
-    "PRIORITY_LEVELS": 4,
     "THETA_HIGH": 2,
     "THETA_STANDARD": 3
   },
@@ -95,5 +94,14 @@
         }
       ]
     }
-  ]
+  ],
+  "priorityContract": {
+    "schema": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "order": "lower-first"
+  },
+  "scheduling": "required"
 }

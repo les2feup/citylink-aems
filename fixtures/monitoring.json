@@ -1,6 +1,6 @@
 {
   "messageClass": "monitoring",
-  "priority": 3,
+  "priority": "{{priority}}",
   "deviceId": "{{deviceId}}",
   "zone": "zone-001",
   "hazardFactor": "{{hazardFactor}}",

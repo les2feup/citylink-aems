@@ -6,12 +6,12 @@
   "title": "aems_common",
   "description": "Schema library for the a-EMS. These properties are not exposed by any Thing; other Thing Models reference them with tm:ref, following the CityLink common_props pattern. The class envelopes (monitoring, alarm, mitigation) and priorityAssignment are each defined once here, so every affordance that uses them shares a single definition.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "properties": {
     "messageClass": {
       "title": "Message class",
-      "description": "TRIAGE/4 reads 'alarm' as its alarm flag; 'monitoring' is routine traffic; 'mitigation' uses a request-response binding and never crosses the fog queue.",
+      "description": "Alarm and monitoring events may cross a deployment scheduler; mitigation uses a request-response binding.",
       "type": "string",
       "enum": [
         "monitoring",
@@ -20,17 +20,9 @@
       ]
     },
     "priority": {
-      "title": "Contextual priority rank",
-      "description": "Output class of the contextual priority (CP) computed by the FLC of the EDU that detected the event, per hazard factor, as a rank: Critical = 1, High = 2, Moderate = 3, Low = 4. The classification rule belongs to the CP computation. Rank 1 is the most urgent, as TRIAGE/4 routes ranks <= thetaHigh to its HIGH band.",
-      "type": "integer",
-      "minimum": 1,
-      "maximum": "{{PRIORITY_LEVELS}}"
-    },
-    "priorityLevels": {
-      "title": "Number of priority ranks (N)",
-      "description": "Number of CP output classes, defined by the FLC (4), not chosen by the EMC. The EMC returns it at configuration so that its agreement with the scheduler can be checked.",
-      "type": "integer",
-      "const": "{{PRIORITY_LEVELS}}"
+      "title": "Contextual priority",
+      "description": "Scalar priority emitted by firmware. The deployment declares its numeric type, bounds and order; the model does not require CRI, HP or a fuzzy computation as its source.",
+      "type": "number"
     },
     "contextualRiskIndex": {
       "title": "Contextual risk index (CRI)",
@@ -72,14 +64,11 @@
     },
     "priorityAssignment": {
       "title": "Priority assignment",
-      "description": "Output of the EMC configure action and input of the EDU updatePriority action. The EMC sends it at registration and whenever the CRI of the zone changes; the EDU discards an assignment whose issuedAt is older than the one already applied.",
+      "description": "Contextual configuration: zone, CRI and issue instant, returned by configure and received by updatePriority. It does not contain the final emitted priority or a number of priority classes.",
       "type": "object",
       "properties": {
         "zone": {
           "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
-        },
-        "priorityLevels": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels"
         },
         "contextualRiskIndex": {
           "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex"
@@ -92,7 +81,6 @@
       },
       "required": [
         "zone",
-        "priorityLevels",
         "contextualRiskIndex",
         "issuedAt"
       ]
@@ -248,7 +236,7 @@
     },
     "mitigationEnvelope": {
       "title": "Mitigation envelope",
-      "description": "Sent by an EMU to an actuating EDU. priority, deviceId, zone and hazardFactor are copied from the alarm without recalculation: the rank measures the urgency of the emergency, not of the actuator's location. Arbitration between concurrent commands belongs to the EDU's local mitigation logic (E3) and is not specified by the architecture.",
+      "description": "Sent by an EMU to an actuating EDU. priority, deviceId, zone and hazardFactor refer to the originating emergency and are available for copying from its alarm without recalculation. Command choice and arbitration belong to local mitigation logic, outside the model.",
       "type": "object",
       "properties": {
         "messageClass": {

@@ -1,6 +1,6 @@
 {
   "messageClass": "alarm",
-  "priority": 2,
+  "priority": "{{priority}}",
   "deviceId": "{{deviceId}}",
   "zone": "zone-001",
   "hazardFactor": "{{hazardFactor}}",

@@ -5,12 +5,13 @@
   ],
   "@type": [
     "tm:ThingModel",
-    "AemsSchedulerTM"
+    "AemsSchedulerTM",
+    "AemsTriage4SchedulerTM"
   ],
   "title": "TRIAGE/4 Scheduler",
-  "description": "Management interface of the TRIAGE/4 scheduler at a fog broker. The Thing is the scheduler's configuration surface, not the queue: messages are not addressed to it. schedulingInput declares the envelope fields the band assignment reads.",
+  "description": "Optional deployment specialization describing TRIAGE/4 configuration, not its queue or an integrated runtime. Requires integer priority with lower-first order. Device and geographic zone identity remain separate from priority.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "schedulingInput": {
     "type": "object",
@@ -23,9 +24,7 @@
         ]
       },
       "priority": {
-        "type": "integer",
-        "minimum": 1,
-        "maximum": "{{PRIORITY_LEVELS}}"
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
       },
       "deviceId": {
         "type": "string"
@@ -46,10 +45,6 @@
     ]
   },
   "properties": {
-    "priorityLevels": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels",
-      "readOnly": true
-    },
     "thetaHigh": {
       "title": "theta_H",
       "description": "Ranks <= thetaHigh go to the HIGH band.",

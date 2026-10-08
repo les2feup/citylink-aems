@@ -1,0 +1,88 @@
+{
+  "description": "Continuous [0,1] priority without a scheduler. Witness priority 0.82 equals the configured CRI; no firmware calculation is executed.",
+  "expect": [],
+  "httpBase": "http://aems.example",
+  "mqttBroker": "mqtt://broker.aems.example:1883",
+  "placeholders": {},
+  "instances": [
+    {
+      "id": "emc",
+      "tm": "ThingModels/controller/emergency_controller.tm.json",
+      "links": [
+        {
+          "rel": "consumes",
+          "target": "edu-s-001",
+          "affordance": "/events/alarm"
+        },
+        {
+          "rel": "consumes",
+          "target": "edu-s-001",
+          "affordance": "/events/monitoring"
+        },
+        {
+          "rel": "dispatchesTo",
+          "target": "emu-fire",
+          "affordance": "/actions/handleAlarm"
+        },
+        {
+          "rel": "updatesPriority",
+          "target": "edu-s-001",
+          "affordance": "/actions/updatePriority"
+        }
+      ]
+    },
+    {
+      "id": "emu-fire",
+      "tm": "ThingModels/mitigation/mitigation_unit.tm.json",
+      "placeholders": {
+        "HAZARD_FACTORS": [
+          "fire"
+        ]
+      },
+      "links": [
+        {
+          "rel": "commands",
+          "target": "edu-a-001",
+          "affordance": "/actions/mitigate"
+        }
+      ]
+    },
+    {
+      "id": "edu-s-001",
+      "tm": "ThingModels/edu/sensing_edu.tm.json",
+      "placeholders": {
+        "HAZARD_FACTORS": [
+          "fire"
+        ]
+      },
+      "links": [
+        {
+          "rel": "registersWith",
+          "target": "emc",
+          "affordance": "/actions/configure"
+        }
+      ]
+    },
+    {
+      "id": "edu-a-001",
+      "tm": "ThingModels/edu/actuating_edu.tm.json",
+      "placeholders": {
+        "HAZARD_FACTORS": [
+          "fire"
+        ]
+      }
+    }
+  ],
+  "priorityContract": {
+    "schema": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "order": "higher-first"
+  },
+  "scheduling": "none",
+  "expectNotApplicable": [
+    "C5"
+  ]
+}

@@ -1,12 +1,11 @@
 {
-  "description": "thetaStandard equals N (4), leaving the BACKGROUND band unreachable. Expected: C5 fails.",
+  "description": "thetaStandard equals the contract maximum (4), leaving the BACKGROUND band unreachable. Expected: C5 fails.",
   "expect": [
     "C5"
   ],
   "httpBase": "http://aems.example",
   "mqttBroker": "mqtt://broker.aems.example:1883",
   "placeholders": {
-    "PRIORITY_LEVELS": 4,
     "THETA_HIGH": 2,
     "THETA_STANDARD": 4
   },
@@ -94,5 +93,14 @@
         }
       ]
     }
-  ]
+  ],
+  "priorityContract": {
+    "schema": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "order": "lower-first"
+  },
+  "scheduling": "required"
 }

@@ -1,31 +1,22 @@
-// Structural checks of the Emergency Model. Each check records PASS/FAIL items through `rec`;
-// the runner (validate.ts) treats a check that records no item as a failure, so no check
-// passes vacuously.
-// C1  every Thing Model conforms to the W3C WoT TM JSON Schema (playground tmValidator)
-// C2  every instantiated TD conforms to the W3C WoT TD JSON Schema (playground tdValidator)
-// C3  reachability: every hazard factor of a sensing EDU reaches, through typed links, an EMU
-//     that serves it (EDU -alarm-> EMC -dispatchesTo-> EMU); commanded actuators share a factor
-// C4  contracts: alarm -> handleAlarm per shared factor; lineage handleAlarm -> mitigate
-//     (rank, device, zone, factor propagated unchanged); configure output -> EDU properties;
-//     configure output identical to updatePriority input (single source, deviations detected)
-// C5  fog: every sensing EDU event is scheduled; only events are scheduled (request-response
-//     affordances never are); scheduled events satisfy the scheduler input;
-//     1 <= thetaH < thetaS < N; N agrees with the EMC
-// C6  witnesses: one message per flow is accepted by its producer and consumer schemas;
-//     invalid priority assignments are rejected; the CAP alert conforms to the OASIS XSD and
-//     carries the CRI and the envelope's hazard factor as parameters
+// Structural checks of deployment interfaces and contracts, not firmware behaviour.
+// C1/C2: W3C TM/TD JSON Schemas (JSON-LD and runtime conformance not checked).
+// C3: registration/update paths and hazard reachability through typed links.
+// C4: connected producer/consumer contracts, priority domains/order, configuration identity.
+// C5: declared optional scheduling; TRIAGE/4 constraints only for its specialization.
+// C6: witness messages, boundary rejection, contextual assignments and official CAP XSD.
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { tdValidator, tmValidator } from "@thing-description-playground/core";
-import Ajv from "ajv";
+import { Ajv } from "ajv";
 import addFormats from "ajv-formats";
 import { validateXML } from "xmllint-wasm";
 import { ROOT } from "./resolve.ts";
 import { fillPlaceholders } from "./instantiate.ts";
+import { contractErrors } from "./contracts.ts";
 
-export type Result = { id: string; ok: boolean; msg: string };
-export type Rec = (id: string, ok: boolean, msg: string) => void;
+export type Result = { id: string; ok: boolean | null; msg: string };
+export type Rec = (id: string, ok: boolean | null, msg: string) => void;
 
 export function walk(dir: string, suffix: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
@@ -35,8 +26,8 @@ const silent = () => {};
 const opts = { checkDefaults: false, checkJsonLd: false };
 export const rel = (f: string) => f.replace(ROOT + "/", "");
 
-export async function c1(rec: Rec) {
-  for (const f of walk(join(ROOT, "ThingModels"), ".tm.json")) {
+export async function c1(rec: Rec, scenarioModels: string[] = []) {
+  for (const f of new Set([...walk(join(ROOT, "ThingModels"), ".tm.json"), ...scenarioModels])) {
     const r = await tmValidator(readFileSync(f, "utf8"), silent, opts);
     rec("C1", r.report.schema === "passed", `${rel(f)}: schema ${r.report.schema}`);
   }
@@ -82,11 +73,36 @@ function dispatchedEmus(tds: any[], s: any) {
     .filter((t) => !t.err && [].concat(t.thing["@type"]).includes("AemsMitigationTM"));
 }
 
+// Only valid registration links identify configuration producer/consumer pairs.
+function registrations(tds: any[], s: any): Target[] {
+  const at = linked(tds);
+  return linksOf(s, "registersWith").map((l) => at(l.href)).filter((t) =>
+    !t.err && t.ptr === "/actions/configure" && byType([t.thing], "AemsControllerTM").length > 0);
+}
+
+function priorityCompatible(producer: any, consumer: any): string[] {
+  const p = producer.priorityContract, c = consumer.priorityContract;
+  return [...contractErrors(p), ...contractErrors(c),
+    ...compatible(p?.schema, c?.schema, "/priority"),
+    ...(p?.order === c?.order ? [] : [`priority order ${p?.order} != ${c?.order}`])];
+}
+
 // ---- C3 ------------------------------------------------------------------------------------
 
 export function c3(rec: Rec, tds: any[]) {
   const at = linked(tds);
   for (const s of byType(tds, "AemsSensingEduTM")) {
+    const links = linksOf(s, "registersWith");
+    const regs = registrations(tds, s);
+    report(rec, "C3", `${s.id} registration`,
+      links.length === 1 && regs.length === 1 ? [] : ["require exactly one registersWith link to an EMC configure action"]);
+    for (const t of regs) {
+      const e = t.thing;
+      rec("C3", linksOf(e, "updatesPriority").some((l) => l.href === `${s.id}#/actions/updatePriority`),
+        `${e.id} must update its registered EDU ${s.id}`);
+      rec("C3", linksOf(e, "consumes").some((l) => l.href === `${s.id}#/events/alarm`),
+        `${e.id} must consume the alarms of its registered EDU ${s.id}`);
+    }
     const consumed = byType(tds, "AemsControllerTM").some((e) => linksOf(e, "consumes").some((l) => l.href === `${s.id}#/events/alarm`));
     const emus = dispatchedEmus(tds, s);
     for (const f of factors(s)) {
@@ -95,6 +111,14 @@ export function c3(rec: Rec, tds: any[]) {
         : consumed ? "is not dispatched to any EMU serving it" : "alarm is not consumed by any EMC"}`);
     }
   }
+  for (const e of byType(tds, "AemsControllerTM"))
+    for (const l of linksOf(e, "updatesPriority")) {
+      const t = at(l.href);
+      report(rec, "C3", `${e.id} updatesPriority ${l.href}`, t.err ? [t.err]
+        : t.ptr !== "/actions/updatePriority" || !byType([t.thing], "AemsSensingEduTM").length
+          ? ["update must target a sensing EDU updatePriority action"]
+          : registrations(tds, t.thing).some((r) => r.thing.id === e.id) ? [] : ["target EDU is not registered with this EMC"]);
+    }
   for (const u of byType(tds, "AemsMitigationTM"))
     for (const l of linksOf(u, "commands")) {
       const t = at(l.href);
@@ -110,7 +134,7 @@ export function c3(rec: Rec, tds: any[]) {
 export function compatible(prod: any = {}, cons: any = {}, path = ""): string[] {
   const p = path || "/";
   const errs: string[] = [];
-  if (cons.type && prod.type !== cons.type) errs.push(`${p}: type ${prod.type} != ${cons.type}`);
+  if (cons.type && prod.type !== cons.type && !(prod.type === "integer" && cons.type === "number")) errs.push(`${p}: type ${prod.type} != ${cons.type}`);
   if (cons.const !== undefined && prod.const !== cons.const) errs.push(`${p}: const ${prod.const} != ${cons.const}`);
   if (cons.enum) {
     const pv = prod.const !== undefined ? [prod.const] : prod.enum;
@@ -152,19 +176,23 @@ const LINEAGE = ["priority", "deviceId", "zone", "hazardFactor"];
 
 export function c4(rec: Rec, tds: any[]) {
   const at = linked(tds);
+  for (const d of tds) report(rec, "C4", `${d.id} priority contract`, contractErrors(d.priorityContract));
   for (const e of byType(tds, "AemsControllerTM")) {
     const alarms = linksOf(e, "consumes").map((l) => ({ l, t: at(l.href) }));
     for (const { l, t } of alarms) if (t.err) report(rec, "C4", `${e.id} consumes ${l.href}`, [t.err]);
+    for (const { l, t } of alarms.filter((a) => !a.t.err))
+      report(rec, "C4", `${l.href} -> ${e.id} priority domain/order`, priorityCompatible(t.thing, e));
     for (const d of linksOf(e, "dispatchesTo")) {
       const u = at(d.href);
       if (u.err) { report(rec, "C4", `${e.id} dispatchesTo ${d.href}`, [u.err]); continue; }
       for (const { l, t } of alarms.filter((a) => !a.t.err && isAlarm(a.t))) {
         const fs = shared(t.thing, u.thing);
-        if (fs.length) report(rec, "C4", `${l.href} -> ${d.href} [${fs}]`, compatible(narrow(t.node.data, fs), u.node.input));
+        if (fs.length) report(rec, "C4", `${l.href} -> ${d.href} [${fs}]`, [
+          ...compatible(narrow(t.node.data, fs), u.node.input), ...priorityCompatible(t.thing, u.thing)]);
       }
     }
     const out = e.actions?.configure?.output;
-    for (const s of byType(tds, "AemsSensingEduTM")) {
+    for (const s of byType(tds, "AemsSensingEduTM").filter((s) => registrations(tds, s).some((r) => r.thing.id === e.id))) {
       const errs = (out?.required ?? []).flatMap((k: string) =>
         s.properties?.[k] === undefined ? [`/${k}: no EDU property receives it`] : compatible(out.properties[k], s.properties[k], `/${k}`));
       report(rec, "C4", `${e.id} configure output -> ${s.id} properties`, errs);
@@ -180,33 +208,48 @@ export function c4(rec: Rec, tds: any[]) {
       const fs = shared(u, a.thing), src = u.actions?.handleAlarm?.input ?? {}, dst = a.node.input ?? {};
       const prod = { type: "object", required: src.required, properties: narrow(src, fs).properties };
       const cons = { type: "object", required: LINEAGE.filter((k) => (dst.required ?? []).includes(k)), properties: dst.properties };
-      report(rec, "C4", `lineage ${u.id} handleAlarm -> ${l.href} [${fs}]`, compatible(prod, cons));
+      report(rec, "C4", `lineage ${u.id} handleAlarm -> ${l.href} [${fs}]`, [...compatible(prod, cons), ...priorityCompatible(u, a.thing)]);
     }
 }
 
 // ---- C5 ------------------------------------------------------------------------------------
 
-export function c5(rec: Rec, tds: any[]) {
+export function c5(rec: Rec, tds: any[], scheduling: string) {
   const at = linked(tds);
   const schedulers = byType(tds, "AemsSchedulerTM");
+  if (scheduling === "none") {
+    if (schedulers.length || tds.some((d) => linksOf(d, "schedules").length))
+      rec("C5", false, "scheduling=none forbids scheduler instances and schedules links");
+    else rec("C5", null, "not applicable: deployment explicitly declares scheduling=none");
+    return;
+  }
+  if (scheduling !== "required") { rec("C5", false, "scheduling must be explicitly none or required"); return; }
+  rec("C5", schedulers.length > 0, "scheduling=required needs a scheduler instance");
   const scheduled = new Set(schedulers.flatMap((x) => linksOf(x, "schedules").map((l) => l.href)));
   for (const s of byType(tds, "AemsSensingEduTM"))
-    for (const ev of Object.keys(s.events ?? {})) {
+    for (const [ev, event] of Object.entries<any>(s.events ?? {})) {
+      if (!["monitoring", "alarm"].includes(event.data?.properties?.messageClass?.const)) continue;
       const href = `${s.id}#/events/${ev}`;
-      rec("C5", scheduled.has(href), `${href} ${scheduled.has(href) ? "is scheduled" : "crosses the fog but is not scheduled by any scheduler"}`);
+      rec("C5", scheduled.has(href), `${href} ${scheduled.has(href) ? "is scheduled" : "has no deployment scheduler"}`);
     }
-  const emcN = byType(tds, "AemsControllerTM").map((d) => d.actions?.configure?.output?.properties?.priorityLevels?.const);
   for (const sch of schedulers) {
+    rec("C5", linksOf(sch, "schedules").length > 0, `${sch.id} must schedule at least one event`);
     for (const l of linksOf(sch, "schedules")) {
       const t = at(l.href);
       report(rec, "C5", `${l.href} -> ${sch.id} schedulingInput`, t.err ? [t.err]
         : !t.ptr.startsWith("/events/") ? ["only events cross the fog queue; request-response affordances must not be scheduled"]
-        : compatible(t.node.data, sch.schedulingInput));
+        : [...compatible(t.node.data, sch.schedulingInput), ...priorityCompatible(t.thing, sch)]);
     }
-    const N = sch.properties.priorityLevels.const, tH = sch.properties.thetaHigh.const, tS = sch.properties.thetaStandard.const;
-    report(rec, "C5", `${sch.id} thresholds (thetaH=${tH}, thetaS=${tS}, N=${N})`,
-      1 <= tH && tH < tS && tS < N ? [] : ["require 1 <= thetaH < thetaS < N so that HIGH, STANDARD and BACKGROUND are all reachable"]);
-    report(rec, "C5", `${sch.id} N agrees with EMC`, emcN.every((n) => n === N) ? [] : [`EMC N=${emcN} vs scheduler N=${N}`]);
+    if (byType([sch], "AemsTriage4SchedulerTM").length) {
+      const c = sch.priorityContract, min = c?.schema?.minimum, max = c?.schema?.maximum;
+      const tH = sch.properties?.thetaHigh?.const, tS = sch.properties?.thetaStandard?.const;
+      report(rec, "C5", `${sch.id} TRIAGE/4 representation`,
+        c?.schema?.type === "integer" && c?.order === "lower-first" && min >= 0 ? []
+          : ["TRIAGE/4 specialization requires nonnegative integer priority with lower-first order"]);
+      report(rec, "C5", `${sch.id} TRIAGE/4 thresholds (${tH}, ${tS}; domain ${min}..${max})`,
+        Number.isInteger(tH) && Number.isInteger(tS) && min <= tH && tH < tS && tS < max ? []
+          : ["require minimum <= thetaHigh < thetaStandard < maximum so every routine band is reachable"]);
+    }
   }
 }
 
@@ -217,7 +260,7 @@ export const CAP_XSD_URL = "http://docs.oasis-open.org/emergency/cap/v1.2/CAP-v1
 export const CAP_XSD_SHA256 = "b7798ef25868b068c97b268bda02d067c7d4ba9373adc5638bf37105804ee723";
 
 const ajv = new Ajv({ strict: false, allErrors: true });
-addFormats(ajv);
+addFormats.default(ajv);
 function accepts(schema: any, data: any): string[] {
   const v = ajv.compile(schema);
   return v(data) ? [] : (v.errors ?? []).map((x) => `${x.instancePath || "/"} ${x.message}`);
@@ -255,10 +298,23 @@ export async function c6(rec: Rec, tds: any[], dir: string) {
   const schedulersOf = (href: string) => byType(tds, "AemsSchedulerTM").filter((x) => linksOf(x, "schedules").some((l) => l.href === href));
   for (const s of byType(tds, "AemsSensingEduTM"))
     for (const f of factors(s)) {
-      const map = { deviceId: s.id, hazardFactor: f };
+      const schema = s.priorityContract.schema;
+      const middle = (schema.minimum + schema.maximum) / 2;
+      const priority = schema.type === "integer" ? Math.ceil(middle) : middle;
+      const map = { deviceId: s.id, hazardFactor: f, priority };
       const mon = witness(dir, "monitoring", map), alarm = witness(dir, "alarm", map);
       const w = `(${s.id}, ${f})`;
       report(rec, "C6", `monitoring ${w} accepted by ${s.id} monitoring`, accepts(s.events.monitoring.data, mon));
+      for (const name of ["monitoring", "alarm"]) {
+        const data = name === "monitoring" ? mon : alarm;
+        const envelope = s.events[name].data;
+        report(rec, "C6", `${name} ${w} priority bounds`, [
+          ...accepts(schema, schema.minimum),
+          ...accepts(schema, schema.maximum),
+          ...rejects(envelope, { ...data, priority: schema.minimum - 1 }, "priority below deployment minimum"),
+          ...rejects(envelope, { ...data, priority: schema.maximum + 1 }, "priority above deployment maximum"),
+          ...(schema.type === "integer" ? rejects(envelope, { ...data, priority: schema.minimum + 0.5 }, "fractional priority") : [])]);
+      }
       for (const x of schedulersOf(`${s.id}#/events/monitoring`))
         report(rec, "C6", `monitoring ${w} accepted by ${x.id} schedulingInput`, accepts(x.schedulingInput, mon));
       report(rec, "C6", `alarm ${w} accepted by ${s.id} alarm`, accepts(s.events.alarm.data, alarm));
@@ -267,7 +323,7 @@ export async function c6(rec: Rec, tds: any[], dir: string) {
       report(rec, "C6", `alarm ${w} CAP alert`, await capErrors(alarm.payload.xml, alarm));
       for (const u of dispatchedEmus(tds, s).filter((t) => factors(t.thing).includes(f))) {
         report(rec, "C6", `alarm ${w} accepted by ${u.thing.id} handleAlarm`, accepts(u.node.input, alarm));
-        // Mitigation copies rank, device, zone and factor from the alarm (lineage, D9).
+        // Mitigation copies priority, device, zone and factor from the alarm (lineage, D9).
         const mit = { ...Object.fromEntries(LINEAGE.map((k) => [k, alarm[k]])), messageClass: "mitigation",
           timestamp: alarm.timestamp, payload: { alarmId: alarm.payload.identifier, command: "activate", issuedBy: u.thing.id } };
         for (const l of linksOf(u.thing, "commands")) {
@@ -280,9 +336,9 @@ export async function c6(rec: Rec, tds: any[], dir: string) {
   for (const e of byType(tds, "AemsControllerTM")) {
     const out = e.actions?.configure?.output;
     if (!out) continue;
-    const cfg = witness(dir, "configure", { priorityLevels: out.properties?.priorityLevels?.const });
+    const cfg = witness(dir, "configure", {});
     report(rec, "C6", `configure witness accepted by ${e.id} configure output`, accepts(out, cfg));
-    for (const s of byType(tds, "AemsSensingEduTM")) {
+    for (const s of byType(tds, "AemsSensingEduTM").filter((s) => registrations(tds, s).some((r) => r.thing.id === e.id))) {
       const input = s.actions?.updatePriority?.input;
       if (!input) continue; // reported by C4
       const { issuedAt, ...noIssuedAt } = cfg;

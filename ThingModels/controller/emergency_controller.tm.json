@@ -8,14 +8,14 @@
     "AemsControllerTM"
   ],
   "title": "Emergency Management Controller",
-  "description": "Cloud-layer controller. Configuration: a CRI tracking service (S1) selects the CRI of the device's zone from the MGA CRI maps and returns it with the number of priority ranks N (the number of CP output classes, defined by the FLC); whenever the CRI of a zone changes by more than the EMC's change threshold (a parameter not fixed by the model), it invokes updatePriority on every EDU registered in that zone. Emergency: consumes alarm events and forwards each alarm envelope unchanged to the EMU(s) serving its hazard factor. Mitigation commands do not pass through the EMC.",
+  "description": "Cloud controller. Configuration selects zone CRI from the declared MGA assessment and pushes changes exceeding its configured threshold through updatePriority. Alarm handling forwards the originating envelope to the EMUs serving its hazard factor. Firmware priority calculation, scheduler selection and mitigation policy are outside this interface.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "actions": {
     "configure": {
       "title": "Configure EDU",
-      "description": "Configuration phase (E1 -> S1/S2). The hazard factors route the EDU's alarms to EMUs and define which Hazard Perception the EDU measures; they do not select the CRI.",
+      "description": "Returns zone, contextualRiskIndex and issuedAt. Declared hazard factors route alarms to EMUs; they do not prescribe a priority computation or alter the MGA assessment configuration.",
       "input": {
         "type": "object",
         "properties": {

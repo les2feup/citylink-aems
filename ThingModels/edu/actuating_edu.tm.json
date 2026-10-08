@@ -8,9 +8,9 @@
     "AemsActuatingEduTM"
   ],
   "title": "Actuating EDU",
-  "description": "Application-layer TM of an actuating EDU. Acts locally (E3) or on command from an EMU through 'mitigate', bound to request-response so the command bypasses the TRIAGE/4 queue and does not pass through the EMC. The command carries the mitigation envelope, whose rank the EDU may use as an input to its local logic; how it arbitrates concurrent commands is not specified by the architecture.",
+  "description": "Application-layer TM of an actuating EDU. Acts locally (E3) or on command from an EMU through 'mitigate', bound to request-response so the command bypasses any deployment broker queue and does not pass through the EMC. The command carries the mitigation envelope, whose priority the EDU may use as an input to its local logic; how it arbitrates concurrent commands is not specified by the architecture.",
   "version": {
-    "model": "0.3.0"
+    "model": "0.4.0"
   },
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
