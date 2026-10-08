@@ -1,0 +1,34 @@
+{
+  "@context": {
+    "citylink": "https://example.org/CityLink#",
+    "AemsSensingEduTM": "citylink:AemsSensingEduTM",
+    "AemsActuatingEduTM": "citylink:AemsActuatingEduTM",
+    "AemsControllerTM": "citylink:AemsControllerTM",
+    "AemsMitigationTM": "citylink:AemsMitigationTM",
+    "AemsSchedulerTM": "citylink:AemsSchedulerTM",
+    "hazardFactors": {
+      "@id": "citylink:hazardFactors",
+      "@container": "@set"
+    },
+    "schedulingInput": {
+      "@id": "citylink:schedulingInput",
+      "@type": "@json"
+    },
+    "consumes": {
+      "@id": "citylink:consumes",
+      "@type": "@id"
+    },
+    "dispatchesTo": {
+      "@id": "citylink:dispatchesTo",
+      "@type": "@id"
+    },
+    "commands": {
+      "@id": "citylink:commands",
+      "@type": "@id"
+    },
+    "schedules": {
+      "@id": "citylink:schedules",
+      "@type": "@id"
+    }
+  }
+}

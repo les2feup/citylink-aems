@@ -1,0 +1,68 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsSchedulerTM"
+  ],
+  "title": "TRIAGE/4 Scheduler",
+  "description": "Management interface of the TRIAGE/4 scheduler at a fog broker. The Thing is the scheduler's configuration surface, not the queue: messages are not addressed to it. schedulingInput declares the envelope fields the band assignment reads.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "schedulingInput": {
+    "type": "object",
+    "properties": {
+      "messageClass": {
+        "type": "string",
+        "enum": [
+          "alarm",
+          "monitoring"
+        ]
+      },
+      "priority": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": "{{PRIORITY_LEVELS}}"
+      },
+      "deviceId": {
+        "type": "string"
+      },
+      "zone": {
+        "type": "string"
+      },
+      "payload": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "messageClass",
+      "priority",
+      "deviceId",
+      "zone",
+      "payload"
+    ]
+  },
+  "properties": {
+    "priorityLevels": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels",
+      "readOnly": true
+    },
+    "thetaHigh": {
+      "title": "theta_H",
+      "description": "Ranks <= thetaHigh go to the HIGH band.",
+      "type": "integer",
+      "const": "{{THETA_HIGH}}",
+      "readOnly": true
+    },
+    "thetaStandard": {
+      "title": "theta_S",
+      "description": "Ranks in (thetaHigh, thetaStandard] go to STANDARD; above, BACKGROUND.",
+      "type": "integer",
+      "const": "{{THETA_STANDARD}}",
+      "readOnly": true
+    }
+  }
+}

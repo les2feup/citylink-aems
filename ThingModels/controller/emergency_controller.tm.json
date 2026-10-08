@@ -1,0 +1,69 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsControllerTM"
+  ],
+  "title": "Emergency Management Controller",
+  "description": "Cloud-layer controller. Configuration: selects pR per hazard factor from the VERUS maps and returns the number of priority ranks N. Emergency: consumes alarm events and dispatches an emergency to the EMU(s) serving the alarm's hazard factor. Mitigation commands do not pass through the EMC.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "actions": {
+    "configure": {
+      "title": "Configure EDU",
+      "description": "Configuration phase (E1 -> S1/S2).",
+      "input": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "hazardFactors": {
+            "type": "array",
+            "items": {
+              "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+            }
+          }
+        },
+        "required": [
+          "deviceId",
+          "latitude",
+          "longitude",
+          "hazardFactors"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "zone": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          },
+          "priorityIndex": {
+            "type": "object",
+            "additionalProperties": {
+              "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityIndex"
+            }
+          },
+          "priorityLevels": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels"
+          }
+        },
+        "required": [
+          "zone",
+          "priorityIndex",
+          "priorityLevels"
+        ]
+      }
+    }
+  }
+}

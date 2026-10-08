@@ -1,0 +1,102 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1"
+  ],
+  "@type": "tm:ThingModel",
+  "title": "aems_common",
+  "description": "Schema library for the a-EMS message envelope. These properties are not exposed by any Thing; other Thing Models reference them with tm:ref, following the CityLink common_props pattern.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "properties": {
+    "messageClass": {
+      "title": "Message class",
+      "description": "TRIAGE/4 reads 'alarm' as its alarm flag; 'monitoring' is routine traffic; 'mitigation' uses a request-response binding and never crosses the fog queue.",
+      "type": "string",
+      "enum": [
+        "monitoring",
+        "alarm",
+        "mitigation"
+      ]
+    },
+    "priority": {
+      "title": "Contextual priority rank",
+      "description": "Discretized contextual priority (CP) assigned by the EDU. Rank 1 is the most urgent, as TRIAGE/4 routes ranks <= thetaHigh to its HIGH band. Proportional discretization known by the EMC: rank = clamp(ceil((1 - CP) * N), 1, N).",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": "{{PRIORITY_LEVELS}}"
+    },
+    "priorityLevels": {
+      "title": "Number of priority ranks (N)",
+      "type": "integer",
+      "const": "{{PRIORITY_LEVELS}}"
+    },
+    "priorityIndex": {
+      "title": "Spatiotemporal priority index (pR)",
+      "description": "pR for one hazard factor at the device's zone, selected by the EMC from the VERUS maps.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "deviceId": {
+      "title": "Device identifier",
+      "type": "string"
+    },
+    "zone": {
+      "title": "Zone identifier",
+      "description": "Identifier of the VERUS hexagonal cell where the device is deployed.",
+      "type": "string"
+    },
+    "hazardFactor": {
+      "title": "Hazard factor",
+      "type": "string",
+      "enum": [
+        "fire",
+        "flood",
+        "airQuality"
+      ]
+    },
+    "epochTimestamp": {
+      "title": "Timestamp",
+      "description": "Milliseconds since Unix epoch.",
+      "type": "integer",
+      "minimum": 0
+    },
+    "envelope": {
+      "title": "Message envelope",
+      "type": "object",
+      "properties": {
+        "messageClass": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/messageClass"
+        },
+        "priority": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+        },
+        "deviceId": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+        },
+        "zone": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+        },
+        "hazardFactor": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+        },
+        "timestamp": {
+          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "messageClass",
+        "priority",
+        "deviceId",
+        "zone",
+        "hazardFactor",
+        "timestamp",
+        "payload"
+      ]
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsActuatingEduTM"
+  ],
+  "title": "Actuating EDU",
+  "description": "Application-layer TM of an actuating EDU. Acts locally (E3) or on command from an EMU through 'mitigate', bound to request-response so the command bypasses the TRIAGE/4 queue and does not pass through the EMC.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "hazardFactors": "{{HAZARD_FACTORS}}",
+  "properties": {
+    "zone": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
+      "readOnly": true
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "active"
+      ],
+      "readOnly": true,
+      "observable": true
+    }
+  },
+  "actions": {
+    "mitigate": {
+      "title": "Mitigate",
+      "input": {
+        "type": "object",
+        "properties": {
+          "alarmId": {
+            "type": "string",
+            "description": "CAP identifier of the alarm being mitigated."
+          },
+          "command": {
+            "type": "string",
+            "enum": [
+              "activate",
+              "deactivate"
+            ]
+          },
+          "issuedBy": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "alarmId",
+          "command"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "accepted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "accepted"
+        ]
+      }
+    }
+  }
+}

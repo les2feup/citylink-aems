@@ -1,0 +1,159 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsSensingEduTM"
+  ],
+  "title": "Sensing EDU",
+  "description": "Application-layer TM of a sensing EDU, to be composed by the CityLink Edge Connector with Platform and Embedded Core TMs. At configuration it stores pR per hazard factor; at runtime it converts pR and Hazard Perception into CP and assigns the discretized rank to every envelope.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "hazardFactors": "{{HAZARD_FACTORS}}",
+  "properties": {
+    "zone": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
+      "readOnly": true
+    },
+    "priorityIndex": {
+      "title": "pR per hazard factor",
+      "description": "Written by the EMC configure output.",
+      "type": "object",
+      "additionalProperties": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityIndex"
+      }
+    },
+    "priorityLevels": {
+      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityLevels"
+    },
+    "contextualPriority": {
+      "title": "Current rank per hazard factor",
+      "readOnly": true,
+      "observable": true,
+      "type": "object",
+      "additionalProperties": {
+        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+      }
+    }
+  },
+  "events": {
+    "monitoring": {
+      "title": "Monitoring",
+      "data": {
+        "type": "object",
+        "properties": {
+          "messageClass": {
+            "type": "string",
+            "const": "monitoring"
+          },
+          "priority": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          },
+          "deviceId": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          },
+          "zone": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          },
+          "hazardFactor": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+          },
+          "timestamp": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          },
+          "payload": {
+            "title": "SOSA observation",
+            "description": "Minimal JSON rendering of sosa:Observation.",
+            "type": "object",
+            "properties": {
+              "observedProperty": {
+                "type": "string"
+              },
+              "hasSimpleResult": {
+                "type": "number"
+              },
+              "unit": {
+                "type": "string"
+              },
+              "resultTime": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "observedProperty",
+              "hasSimpleResult",
+              "resultTime"
+            ]
+          }
+        },
+        "required": [
+          "messageClass",
+          "priority",
+          "deviceId",
+          "zone",
+          "hazardFactor",
+          "timestamp",
+          "payload"
+        ]
+      }
+    },
+    "alarm": {
+      "title": "Alarm",
+      "data": {
+        "type": "object",
+        "properties": {
+          "messageClass": {
+            "type": "string",
+            "const": "alarm"
+          },
+          "priority": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          },
+          "deviceId": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          },
+          "zone": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          },
+          "hazardFactor": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+          },
+          "timestamp": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          },
+          "payload": {
+            "title": "CAP alert",
+            "description": "CAP 1.2 alert kept as an XML string so it stays checkable against the OASIS XSD; pR and the hazard factor travel as <parameter> entries.",
+            "type": "object",
+            "properties": {
+              "identifier": {
+                "type": "string"
+              },
+              "xml": {
+                "type": "string",
+                "contentMediaType": "application/cap+xml"
+              }
+            },
+            "required": [
+              "identifier",
+              "xml"
+            ]
+          }
+        },
+        "required": [
+          "messageClass",
+          "priority",
+          "deviceId",
+          "zone",
+          "hazardFactor",
+          "timestamp",
+          "payload"
+        ]
+      }
+    }
+  }
+}

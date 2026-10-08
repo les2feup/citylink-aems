@@ -1,0 +1,69 @@
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+  ],
+  "@type": [
+    "tm:ThingModel",
+    "AemsMitigationTM"
+  ],
+  "title": "Emergency Mitigation Unit",
+  "description": "Cloud-layer mitigation service for one or more hazard factors. Receives emergencies dispatched by the EMC and may command actuating EDUs directly.",
+  "version": {
+    "model": "0.2.0"
+  },
+  "hazardFactors": "{{HAZARD_FACTORS}}",
+  "actions": {
+    "handleAlarm": {
+      "title": "Handle alarm",
+      "description": "Alarm forwarding (S3 -> M1).",
+      "input": {
+        "type": "object",
+        "properties": {
+          "messageClass": {
+            "type": "string",
+            "const": "alarm"
+          },
+          "priority": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          },
+          "deviceId": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          },
+          "zone": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          },
+          "hazardFactor": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+          },
+          "timestamp": {
+            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          },
+          "payload": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "messageClass",
+          "priority",
+          "deviceId",
+          "zone",
+          "hazardFactor",
+          "timestamp",
+          "payload"
+        ]
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "accepted": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "accepted"
+        ]
+      }
+    }
+  }
+}
