@@ -68,13 +68,13 @@
       "type": "object",
       "properties": {
         "zone": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
         },
         "contextualRiskIndex": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex"
         },
         "issuedAt": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp",
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp",
           "title": "Issued at",
           "description": "Instant at which the EMC issued this CRI value."
         }
@@ -91,22 +91,22 @@
       "type": "object",
       "properties": {
         "messageClass": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/messageClass"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/messageClass"
         },
         "priority": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
         },
         "deviceId": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
         },
         "zone": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
         },
         "hazardFactor": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
         },
         "timestamp": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
         },
         "payload": {
           "type": "object"
@@ -131,19 +131,19 @@
           "const": "monitoring"
         },
         "priority": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
         },
         "deviceId": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
         },
         "zone": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
         },
         "hazardFactor": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
         },
         "timestamp": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
         },
         "payload": {
           "title": "Observation",
@@ -191,19 +191,19 @@
           "const": "alarm"
         },
         "priority": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
         },
         "deviceId": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
         },
         "zone": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
         },
         "hazardFactor": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
         },
         "timestamp": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
         },
         "payload": {
           "title": "CAP alert",
@@ -244,19 +244,19 @@
           "const": "mitigation"
         },
         "priority": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
         },
         "deviceId": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
         },
         "zone": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone"
         },
         "hazardFactor": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/localHazardFactor"
         },
         "timestamp": {
-          "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
+          "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp"
         },
         "payload": {
           "title": "Mitigation command",

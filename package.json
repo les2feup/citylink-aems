@@ -1,5 +1,5 @@
 {
-  "name": "aems-emergency-model",
+  "name": "citylink-aems",
   "version": "0.5.0",
   "description": "Emergency Model: W3C WoT Thing Models and structural validation for the priority-aware a-EMS architecture",
   "scripts": {
@@ -7,6 +7,10 @@
     "validate": "tsx src/validate.ts minimal",
     "validate:all": "tsx src/validate.ts --all",
     "fetch:cap": "tsx src/fetch-cap.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/les2feup/citylink-aems.git"
   },
   "license": "MIT",
   "dependencies": {

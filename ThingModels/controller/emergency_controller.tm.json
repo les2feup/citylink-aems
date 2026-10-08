@@ -1,7 +1,7 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+    "https://raw.githubusercontent.com/les2feup/citylink-aems/main/context/citylink-aems.context.jsonld"
   ],
   "@type": [
     "tm:ThingModel",
@@ -20,7 +20,7 @@
         "type": "object",
         "properties": {
           "deviceId": {
-            "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
+            "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/deviceId"
           },
           "latitude": {
             "type": "number"
@@ -31,7 +31,7 @@
           "hazardFactors": {
             "type": "array",
             "items": {
-              "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
+              "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/hazardFactor"
             }
           }
         },
@@ -43,7 +43,7 @@
         ]
       },
       "output": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityAssignment"
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priorityAssignment"
       }
     }
   }

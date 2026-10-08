@@ -1,7 +1,7 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+    "https://raw.githubusercontent.com/les2feup/citylink-aems/main/context/citylink-aems.context.jsonld"
   ],
   "@type": [
     "tm:ThingModel",
@@ -15,7 +15,7 @@
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
     "zone": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
+      "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
       "readOnly": true
     },
     "state": {
@@ -33,7 +33,7 @@
       "title": "Mitigate",
       "description": "Mitigation (M2 -> E3).",
       "input": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/mitigationMessage"
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/mitigationMessage"
       },
       "output": {
         "type": "object",

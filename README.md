@@ -158,9 +158,3 @@ timing, scale calibration, city-scale performance, mitigation equity, or emergen
 The last received context can become stale when a unit disconnects. Scheduling links do
 not imply network-level timing guarantees. Those limits bound the evidence without removing
 the utility of identifying structural incompatibilities before operation.
-
-## Before publishing
-
-Replace `OWNER` consistently in TM references, URLs and `src/resolve.ts`. The repository's
-local reference mapping supports offline validation; its placeholder URLs are not evidence
-that a deployment or publicly hosted model is available.

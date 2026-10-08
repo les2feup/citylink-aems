@@ -1,7 +1,7 @@
 {
   "@context": [
     "https://www.w3.org/2022/wot/td/v1.1",
-    "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/context/citylink-aems.context.jsonld"
+    "https://raw.githubusercontent.com/les2feup/citylink-aems/main/context/citylink-aems.context.jsonld"
   ],
   "@type": [
     "tm:ThingModel",
@@ -15,16 +15,16 @@
   "hazardFactors": "{{HAZARD_FACTORS}}",
   "properties": {
     "zone": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
+      "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/zone",
       "readOnly": true
     },
     "contextualRiskIndex": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex",
+      "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/contextualRiskIndex",
       "description": "CRI currently applied, written by configure and updatePriority.",
       "readOnly": true
     },
     "issuedAt": {
-      "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp",
+      "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/epochTimestamp",
       "title": "Issued at",
       "description": "issuedAt of the CRI currently applied; older assignments are discarded.",
       "readOnly": true
@@ -35,7 +35,7 @@
       "observable": true,
       "type": "object",
       "additionalProperties": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priority"
       },
       "description": "Firmware may assign the same priority to different factors; no local hazard-perception calculation is required."
     }
@@ -45,7 +45,7 @@
       "title": "Update priority",
       "description": "Invoked by the EMC on every EDU of a zone whenever the CRI of that zone changes. The update is atomic; an assignment older than the one applied (by issuedAt) is discarded.",
       "input": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/priorityAssignment"
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/priorityAssignment"
       }
     }
   },
@@ -53,13 +53,13 @@
     "monitoring": {
       "title": "Monitoring",
       "data": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/monitoringMessage"
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/monitoringMessage"
       }
     },
     "alarm": {
       "title": "Alarm",
       "data": {
-        "tm:ref": "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/ThingModels/generic/aems_common.tm.json#/properties/alarmMessage",
+        "tm:ref": "https://raw.githubusercontent.com/les2feup/citylink-aems/main/ThingModels/generic/aems_common.tm.json#/properties/alarmMessage",
         "maxProperties": 2
       }
     }

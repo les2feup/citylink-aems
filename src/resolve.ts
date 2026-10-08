@@ -5,7 +5,7 @@ import { join } from "node:path";
 import type { PriorityContract } from "./contracts.ts";
 
 export const REPO_BASE =
-  "https://raw.githubusercontent.com/OWNER/aems-emergency-model/main/";
+  "https://raw.githubusercontent.com/les2feup/citylink-aems/main/";
 export const ROOT = join(import.meta.dirname, "..");
 
 const cache = new Map<string, any>();

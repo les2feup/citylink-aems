@@ -46,7 +46,7 @@ An invalid manifest stops instantiation with a named failed prerequisite.
 
 Placeholder filling preserves typed values when the placeholder is the complete JSON
 string. `tm:ref` resolution maps `REPO_BASE` to local files and rejects other bases; siblings
-override referenced definitions shallowly. `OWNER` must be replaced consistently before
-publishing. Historical notes under ignored `docs/conceptual/` can predate v0.4.0; their
-mandatory fuzzy/class-count/scheduler decisions are superseded by the user's deployment
-contract intervention. Do not present those historical decisions as current invariants.
+override referenced definitions shallowly. Historical notes under ignored `docs/conceptual/`
+can predate v0.4.0; their mandatory fuzzy/class-count/scheduler decisions are superseded by
+the user's deployment contract intervention. Do not present those historical decisions as
+current invariants.
